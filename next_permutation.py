@@ -41,23 +41,23 @@ class Solution:
     def autoswap(self, num, breakpoint):
         """
         swap breakpoint with the smallest larger num
-        then reverse everything after it
         """
         for i in range(breakpoint + 1, len(num) - 1):
-            if num[breakpoint] > num[i + 1]:
+            if num[breakpoint] >= num[i + 1]:
                 num[breakpoint], num[i] = num[i], num[breakpoint]
-                s, e = i + 1, len(num) - 1
-                while e > s:
-                    num[s], num[e] = num[e], num[s]
                 return
         num[breakpoint], num[-1] = num[-1], num[breakpoint]
 
     def nextPermutation(self, num):
         breakpoint = self.breakpoint(num)
-        if not breakpoint:
+        if breakpoint is None:
             num.reverse()
         else:
             self.autoswap(num, breakpoint)
+            s, e = breakpoint + 1, len(num) - 1
+            while e > s:
+                num[s], num[e] = num[e], num[s]
+                e, s = e - 1, s + 1 # forgot this f**king shit again!!!!!!!!
         return num
 
 
@@ -74,11 +74,17 @@ class Test(unittest.TestCase):
         self.assertEqual(
             self.s.nextPermutation([1, 2, 3]), [1, 3, 2])
         self.assertEqual(
+            self.s.nextPermutation([1, 3, 2]), [2, 1, 3])
+        self.assertEqual(
             self.s.nextPermutation([3, 2, 1]), [1, 2, 3])
         self.assertEqual(
             self.s.nextPermutation([1, 1, 5]), [1, 5, 1])
         self.assertEqual(
+            self.s.nextPermutation([1, 5, 1]), [5, 1, 1])
+        self.assertEqual(
             self.s.nextPermutation([1, 9, 4, 7]), [1, 9, 7, 4])
+        self.assertEqual(
+            self.s.nextPermutation([5,4,7,5,3,2]), [5, 5, 2, 3, 4, 7])
 
 
 if __name__ == '__main__':
