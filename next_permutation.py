@@ -29,21 +29,36 @@ class Solution:
     # @param num, a list of integer
     # @return a list of integer
 
-    def nextPermutation(self, num):
-        if len(num) < 2:
-            return num
+    def breakpoint(self, num):
+        """ find the break point num[i] < num[i+1] """
+        p = len(num) - 2
+        while p >= 0:
+            if num[p] < num[p + 1]:
+                return p
+            p -= 1 # forgot this f**king shit again!!!!!!!!
+        return None
 
-        p1 = len(num) - 2
-        while p1 >= 0:
-            p2 = len(num) - 1
-            while p2 > p1:
-                if num[p1] < num[p2]:
-                    num[p1], num[p2] = num[p2], num[p1]
-                    num[p1 + 1:] = num[p1 + 1:][::-1]
-                    return num
-                p2 -= 1
-            p1 -= 1
-        return num[::-1]
+    def autoswap(self, num, breakpoint):
+        """
+        swap breakpoint with the smallest larger num
+        then reverse everything after it
+        """
+        for i in range(breakpoint + 1, len(num) - 1):
+            if num[breakpoint] > num[i + 1]:
+                num[breakpoint], num[i] = num[i], num[breakpoint]
+                s, e = i + 1, len(num) - 1
+                while e > s:
+                    num[s], num[e] = num[e], num[s]
+                return
+        num[breakpoint], num[-1] = num[-1], num[breakpoint]
+
+    def nextPermutation(self, num):
+        breakpoint = self.breakpoint(num)
+        if not breakpoint:
+            num.reverse()
+        else:
+            self.autoswap(num, breakpoint)
+        return num
 
 
 class Test(unittest.TestCase):
@@ -51,17 +66,19 @@ class Test(unittest.TestCase):
     def setUp(self):
         self.s = Solution()
 
-    def test_123(self):
+    def test(self):
+        self.assertEqual(
+            self.s.nextPermutation([1, 2]), [2, 1])
+        self.assertEqual(
+            self.s.nextPermutation([2, 1]), [1, 2])
         self.assertEqual(
             self.s.nextPermutation([1, 2, 3]), [1, 3, 2])
-
-    def test_321(self):
         self.assertEqual(
             self.s.nextPermutation([3, 2, 1]), [1, 2, 3])
-
-    def test_115(self):
         self.assertEqual(
             self.s.nextPermutation([1, 1, 5]), [1, 5, 1])
+        self.assertEqual(
+            self.s.nextPermutation([1, 9, 4, 7]), [1, 9, 7, 4])
 
 
 if __name__ == '__main__':
