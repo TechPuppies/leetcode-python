@@ -11,6 +11,7 @@
 # return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
 #
 #
+import unittest
 
 
 class Solution:
@@ -40,6 +41,24 @@ class Solution:
         return res
 
 
-s = Solution()
-print s.restoreIpAddresses('25525511135')
-print s.restoreIpAddresses('010010')
+class Test(unittest.TestCase):
+
+    def setUp(self):
+        self.s = Solution()
+
+    def test_1(self):
+        self.assertEqual(self.s.restoreIpAddresses('25525511135'),
+            ['255.255.111.35', '255.255.11.135'])
+
+    def test_2(self):
+        self.assertEqual(self.s.restoreIpAddresses('010010'),
+            ['0.100.1.0', '0.10.0.10'])
+
+    def test_3(self):
+        self.assertEqual(self.s.restoreIpAddresses('256256256256'),
+            [])
+
+
+if __name__ == '__main__':
+
+    unittest.main()
