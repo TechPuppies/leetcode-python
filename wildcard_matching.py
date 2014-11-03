@@ -20,52 +20,66 @@
 # isMatch("aa", "a*") == True
 # isMatch("ab", "?*") == True
 # isMatch("aab", "c*a*b") == False
-#
-#
+import unittest
 
 
 class Solution:
     # @param s, an input string
     # @param p, a pattern string
     # @return a boolean
-    def isMatch(self, s, p):
-        self.s = s
-        self.p = p
-        return self.helper(0, 0)
 
-    def helper(self, ps, pp):
-        if self.s is None or self.p is None:
+    def isMatch(self, s, p):
+        if s is None or p is None:
             return False
-        if ps >= len(self.s) or pp >= len(self.p):
-            if pp >= len(self.p) and ps >= len(self.s):
-                return True
+        ps, pp, match, astroid = 0, 0, 0, -1
+        while ps < len(s):
+            if pp < len(p) and (p[pp] == '?' or s[ps] == p[pp]):
+                pp, ps = pp + 1, ps + 1
+            elif pp < len(p) and p[pp] == '*':
+                astroid, match, pp = pp, ps, pp + 1
+            elif astroid >= 0:
+                pp, match, ps  = astroid + 1, match + 1, match
             else:
                 return False
-
-        if self.s[ps] == self.p[pp] or self.p[pp] == '?':
-            return self.helper(ps+1, pp+1)
-        elif self.p[pp] == '*':
-            while pp < len(self.p) and self.p[pp] == '*':
-                pp += 1
-                if pp == len(self.p):
-                    return True
-            return self.helper(ps, pp) or self.helper(ps+1, pp-1)
-        return False
+        while pp < len(p) and p[pp] == '*':
+            pp += 1
+        return pp == len(p)
 
 
-s = Solution()
-print s.isMatch("a","aa") == False
-print s.isMatch("aa","a") == False
-print s.isMatch("aa","aa") == True
-print s.isMatch("aaa","aa") == False
-print s.isMatch("aa", "*") == True
-print s.isMatch("aa", "a*") == True
-print s.isMatch("ab", "?*") == True
-print s.isMatch("aab", "c*a*b") == False
-print s.isMatch("aab", "c*a*b") == False
-print s.isMatch("", "") == True
-print s.isMatch(None, None) == False
-print s.isMatch("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b") == False
-print s.isMatch("abbaabbbbababaababababbabbbaaaabbbbaaabbbabaabbbbbabbbbabbabbaaabaaaabbbbbbaaabbabbbbababbbaaabbabbabb",
-    "***b**a*a*b***b*a*b*bbb**baa*bba**b**bb***b*a*aab*a**") == True
-print s.isMatch('abbbabaaabbabbabbabaabbbaabaaaabbbabaaabbbbbaaababbb', '**a*b*aa***b***bbb*ba*a') == False
+class Test(unittest.TestCase):
+
+    def setUp(self):
+        self.s = Solution()
+
+    def test(self):
+        self.assertFalse(self.s.isMatch("a", "aa"))
+        self.assertFalse(self.s.isMatch("aa", "a"))
+        self.assertEqual(self.s.isMatch("aa", "aa"), True)
+        self.assertEqual(self.s.isMatch("aaa", "aa"), False)
+        self.assertEqual(self.s.isMatch("aa", "*"), True)
+        self.assertEqual(self.s.isMatch("aa", "a*"), True)
+        self.assertEqual(self.s.isMatch("ab", "?*"), True)
+        self.assertEqual(self.s.isMatch("aab", "c*a*b"), False)
+        self.assertEqual(self.s.isMatch("aab", "c*a*b"), False)
+        self.assertEqual(self.s.isMatch("", ""), True)
+        self.assertEqual(self.s.isMatch(None, None), False)
+        self.assertEqual(
+            self.s.isMatch(
+                "aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba",
+                "a*******b"),
+            False)
+        self.assertEqual(
+            self.s.isMatch(
+                "abbaabbbbababaababababbabbbaaaabbbbaaabbbabaabbbbbabbbba" + \
+                "bbabbaaabaaaabbbbbbaaabbabbbbababbbaaabbabbabb",
+                "***b**a*a*b***b*a*b*bbb**baa*bba**b**bb***b*a*aab*a**"),
+            True)
+        self.assertEqual(
+            self.s.isMatch(
+                'abbbabaaabbabbabbabaabbbaabaaaabbbabaaabbbbbaaababbb',
+                '**a*b*aa***b***bbb*ba*a'),
+            False)
+
+
+if __name__ == '__main__':
+    unittest.main()
