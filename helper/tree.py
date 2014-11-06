@@ -18,16 +18,15 @@ class Tree():
     def load_array(self, array):
         if not array:
             return None
-        head = TreeNode(array[0])
-        array.pop(0)
+        head = TreeNode(array.pop(0))
         queue = [head]
         while array:
             node = queue.pop(0)
-            l = array.pop(0)
+            l = array.pop(0) if array else None
             if l is not None:
                 node.left = TreeNode(l)
                 queue.append(node.left)
-            r = array.pop(0)
+            r = array.pop(0) if array else None
             if r is not None:
                 node.right = TreeNode(r)
                 queue.append(node.right)
@@ -61,6 +60,13 @@ class Test(unittest.TestCase):
         self.assertEqual(t.head.right.val, 3)
         self.assertEqual(t.head.left.left, None)
         self.assertEqual(t.head.left.right.val, 4)
+
+    def test3(self):
+        t = Tree()
+        t.load_leetcode_string('{1,#,2,3}')
+        self.assertEqual(t.head.val, 1)
+        self.assertEqual(t.head.right.val, 2)
+        self.assertEqual(t.head.right.left.val, 3)
 
 if __name__ == '__main__':
     unittest.main()
