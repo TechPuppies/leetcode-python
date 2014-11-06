@@ -67,6 +67,20 @@ class Solution:
         res += self.inorderTraversalHelper(root.right)
         return res
 
+    def inorderTraversalWithoutRecursion(self, root):
+        res, stack, current = [], [], root
+        while True:
+            while current:
+                stack.append(current)
+                current = current.left
+            if stack:
+                node = stack.pop()
+                res.append(node.val)
+                current = node.right
+            else:
+                break
+        return res
+
 
 class Test(unittest.TestCase):
 
@@ -77,7 +91,8 @@ class Test(unittest.TestCase):
         s = Solution()
         self.assertEqual(s.inorderTraversal(t.head),
                          [2, 1, 4, 5, 3])
-
+        self.assertEqual(s.inorderTraversalWithoutRecursion(t.head),
+                         [2, 1, 4, 5, 3])
 
 if __name__ == '__main__':
     unittest.main()
