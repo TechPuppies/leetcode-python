@@ -6,7 +6,8 @@
 # Evaluate the value of an arithmetic expression in Reverse Polish Notation.
 #
 #
-# Valid operators are +, -, *, /. Each operand may be an integer or another expression.
+# Valid operators are +, -, *, /. Each operand may be an integer or another
+# expression.
 #
 #
 # Some examples:
@@ -16,14 +17,15 @@
 #
 #
 #
-import math
+import unittest
+
 
 class Solution:
     # @param tokens, a list of string
     # @return an integer
+
     def ezCalc(self, p1, p2, o):
         p1, p2 = int(p1), int(p2)
-        # print p1, p2, o
         if o == '+':
             return (p1) + (p2)
         elif o == '-':
@@ -31,12 +33,9 @@ class Solution:
         elif o == '*':
             return (p1) * (p2)
         elif o == '/':
-            if p1 < 0 and p2 > 0:
-                return -(abs((p1))/(p2))
-            elif p2 < 0 and p1 > 0:
-                return -((p1)/abs((p2)))
-            else:
-                return (p1) / (p2)
+            if (p1 > 0) ^ (p2 > 0):
+                return -(abs(p1)/abs(p2))
+            return (p1) / (p2)
         else:
             raise ValueError
 
@@ -57,8 +56,19 @@ class Solution:
                 stack.append(i)
         return stack.pop()
 
-s = Solution()
-print s.evalRPN(["18"]) == 18
-print s.evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"]) == 22
-print s.evalRPN(["2", "1", "+", "3", "*"]) == 9
-print s.evalRPN(["4", "13", "5", "/", "+"]) == 6
+
+class Test(unittest.TestCase):
+
+    def test(self):
+        s = Solution()
+        self.assertEqual(s.evalRPN(["18"]), 18)
+        self.assertEqual(
+            s.evalRPN(
+                ["10", "6", "9", "3", "+", "-11",
+                 "*", "/", "*", "17", "+", "5", "+"]), 22)
+        self.assertEqual(s.evalRPN(["2", "1", "+", "3", "*"]), 9)
+        self.assertEqual(s.evalRPN(["4", "13", "5", "/", "+"]), 6)
+
+
+if __name__ == '__main__':
+    unittest.main()
