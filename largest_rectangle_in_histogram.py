@@ -1,14 +1,15 @@
-
 # coding=utf-8
 # AC Rate: 21.1%
 # SOURCE URL: https://oj.leetcode.com/problems/largest-rectangle-in-histogram/
 #
 #
-# Given n non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
+# Given n non-negative integers representing the histogram's bar height where
+# the width of each bar is 1, find the area of largest rectangle in the histogram.
 #
 #
 #
-# Above is a histogram where width of each bar is 1, given height = [2,1,5,6,2,3].
+# Above is a histogram where width of each bar is 1,
+# given height = [2,1,5,6,2,3].
 #
 #
 #
@@ -19,7 +20,7 @@
 # Given height = [2,1,5,6,2,3],
 # return 10.
 #
-#
+import unittest
 
 
 class Solution:
@@ -40,7 +41,14 @@ class Solution:
             stack.append(k)
         return best
 
-s = Solution()
-print s.largestRectangleArea([2,1,5,6,2,3]) == 10
-print s.largestRectangleArea([6,2,5,4,5]) == 12
-print s.largestRectangleArea([7,7,7,7,4,5]) == 28
+
+class Test(unittest.TestCase):
+
+    def test(self):
+        s = Solution()
+        self.assertEqual(s.largestRectangleArea([2,1,5,6,2,3]), 10)
+        self.assertEqual(s.largestRectangleArea([6,2,5,4,5]), 12)
+        self.assertEqual(s.largestRectangleArea([7,7,7,7,4,5]), 28)
+
+if __name__ == '__main__':
+    unittest.main()
